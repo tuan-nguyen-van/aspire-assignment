@@ -1,0 +1,19 @@
+parameters:
+	level: 9
+	paths:	
+		- app
+		- config
+		- database
+		- resources/views
+		- routes
+		- tests
+	reportUnmatchedIgnoredErrors: false
+	ignoreErrors:
+		- '#Call to an undefined static method App\\Models(.*)::.*#'
+		- '#Call to an undefined method Illuminate\\(.*)::.*#'
+		- '#Access to an undefined property Illuminate\\Http\\(.*)::.*#'
+		- '#Access to an undefined property App\\Models\\(.*)::.*#'
+		- '#Cannot call method previous\(\) on Illuminate\\(.*)#'
+		- '#Cannot access property \$id on mixed.#'
+		- '#Call to an undefined method Faker\\Generator::.*#'
+		- '#.* but returns Illuminate\\Support\\Collection.*#'

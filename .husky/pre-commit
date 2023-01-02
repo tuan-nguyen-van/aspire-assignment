@@ -1,0 +1,17 @@
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "pre commit hook start"
+
+CHANGED_FILES=$(git diff --cached --name-only --diff-filter=ACM -- '*.php')
+
+if [[ $CHANGED_FILES != '' ]];
+then
+  echo "Contains .php files"
+  ./vendor/bin/sail php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --verbose $CHANGED_FILES
+  git add $CHANGED_FILES
+  ./vendor/bin/sail php vendor/bin/phpstan analyse $CHANGED_FILES
+else 
+  echo "Does not contain .php file"
+fi
+
+echo "pre commit hook finish"
