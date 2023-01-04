@@ -20,9 +20,11 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
+        'phone',
     ];
 
     /**
@@ -43,4 +45,28 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'user_has_roles');
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        $isAdmin = false;
+        foreach ($this->roles as $role) {
+            if ($role->name === 'admin') {
+                $isAdmin = true;
+                break;
+            }
+        }
+
+        return $isAdmin;
+    }
 }

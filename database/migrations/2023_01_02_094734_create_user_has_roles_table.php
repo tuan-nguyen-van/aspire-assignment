@@ -23,6 +23,7 @@ return new class() extends Migration {
                 ->onUpdate('restrict')
                 ->onDelete('cascade');
             $table->timestamps();
+            $table->unique(['user_id', 'role_id']);
         });
     }
 

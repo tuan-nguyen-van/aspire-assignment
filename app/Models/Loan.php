@@ -8,4 +8,24 @@ use Illuminate\Database\Eloquent\Model;
 class Loan extends Model
 {
     use HasFactory;
+
+    /**
+     * The attributes that are guarded.
+     *
+     * @var array<int,string>
+     */
+    protected $guarded = [];
+
+    /**
+     * @var string[]
+     */
+    public const PAYMENT_PERIOD = ['weekly', 'monthly'];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function scheduledRepayments()
+    {
+        return $this->hasMany(ScheduledRepayment::class);
+    }
 }

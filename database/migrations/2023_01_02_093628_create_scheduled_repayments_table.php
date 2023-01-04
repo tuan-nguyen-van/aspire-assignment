@@ -12,13 +12,13 @@ return new class() extends Migration {
      */
     public function up()
     {
-        Schema::create('principle_repayments', function (Blueprint $table) {
+        Schema::create('scheduled_repayments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('loan_id')
                 ->constrained('loans')
                 ->onUpdate('restrict')
                 ->onDelete('cascade');
-            $table->unsignedInteger('amount');
+            $table->decimal('amount', 15, 2, true);
             $table->date('due_date');
             $table->enum('state', ['active', 'pending', 'paid'])->default('pending');
             $table->timestamps();
@@ -32,6 +32,6 @@ return new class() extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('principle_repayments');
+        Schema::dropIfExists('scheduled_repayments');
     }
 };

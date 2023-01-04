@@ -19,6 +19,7 @@ return new class() extends Migration {
                 ->onUpdate('restrict')
                 ->onDelete('cascade');
             $table->unsignedInteger('amount');
+            $table->decimal('remained_principle', 15, 2, true);
             $table->unsignedSmallInteger('term');
             $table->enum('payment_period', ['weekly', 'monthly']);
             $table->date('start_date');
