@@ -18,7 +18,7 @@ class LoanController extends Controller
         $validatedData = $this->validateLoanInputs($request);
 
         // Check the payment_period is weekly or monthly.
-        if ($this->validatePaymentPeriod($request) !== 'pass') {
+        if ($this->validatePaymentPeriod($request) !== 'ok') {
             return $this->validatePaymentPeriod($request);
         }
 
@@ -72,7 +72,7 @@ class LoanController extends Controller
                 $totalAmountOfRepayments += $amount;
             }
             // Use bulk insert here instead of single ScheduledRepayment::create()
-            // one at a time because that causes many queries to database
+            // one at a time because that causes many queries to database (N+1 problem)
             // and makes application runs slower.
             DB::table('scheduled_repayments')->insert($scheduledRepayments);
         });
@@ -146,7 +146,7 @@ class LoanController extends Controller
     }
 
     /**
-     * @return \Illuminate\Http\JsonResponse|'pass'
+     * @return \Illuminate\Http\JsonResponse|'ok'
      */
     public function validatePaymentPeriod(Request &$request)
     {
@@ -160,6 +160,6 @@ class LoanController extends Controller
             ], 422);
         }
 
-        return 'pass';
+        return 'ok';
     }
 }
