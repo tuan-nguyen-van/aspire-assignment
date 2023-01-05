@@ -46,7 +46,7 @@ sail artisan test
 ## Usage guide
 - We should use SQL databases because we use Laravel and we have a lot of transactions and the type of all table columns are known.
 
--   Database design [database-diagram.pdf](https://github.com/tuan-nguyen-van/jitera-coding-test/blob/develop/database-diagram.pdf)
+-   Database diagram design [database.pdf](https://github.com/tuan-nguyen-van/aspire-assignment/blob/develop/Database.pdf)
 
 -   Use Laravel/Sanctum package to issue and manage API tokens
 
@@ -54,12 +54,10 @@ sail artisan test
 
 - Then to create HTTP request to api routes inside /routes/api.php you must set header with 'Authorization' equal "Bearer $token"
 
-- The sample Postman file for you to import is [here](https://github.com/tuan-nguyen-van/jitera-coding-test/blob/develop/postman_collection.json)
+- The sample Postman file for you to import is [here](https://github.com/tuan-nguyen-van/aspire-assignment/blob/develop/postman_collection.json)
 
 - Use husky npm package to run /.husky/pre-commit commands to run code checking, code fixing before commit and /.husky/pre-push to run tests before pushing code to github.
 
 - Use PHP CS Fixer package to fix code style before commit with the same format for all developers.
 
 - Use PHP stan package to check types, code logic, code quality and catch bugs automatically before commit.
-
-- You could watch this youtube [video](https://youtu.be/rbqea2YZv6U) for reference. I will delete this video after the interview finished.

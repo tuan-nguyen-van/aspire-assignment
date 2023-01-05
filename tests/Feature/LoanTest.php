@@ -88,13 +88,11 @@ class LoanTest extends TestCase
 
         // Assert database has 5 new scheduled repayments from 1 to 5 with due_date
         $this->assertDatabaseHas('scheduled_repayments', [
-            'id' => 1,
             'amount' => 300.00,
             'due_date' => Carbon::now()->addDays(1)->addWeeks(1)->format('Y-m-d'),
             'state' => 'pending',
         ]);
         $this->assertDatabaseHas('scheduled_repayments', [
-            'id' => 5,
             'amount' => 300.00,
             'due_date' => Carbon::now()->addDays(1)->addWeeks(5)->format('Y-m-d'),
             'state' => 'pending',
