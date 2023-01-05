@@ -44,6 +44,7 @@ sail artisan test
 ```
 
 ## Usage guide
+- We should use SQL databases because we use Laravel and we have a lot of transactions and the type of all table columns are known.
 
 -   Database design [database-diagram.pdf](https://github.com/tuan-nguyen-van/jitera-coding-test/blob/develop/database-diagram.pdf)
 
@@ -55,14 +56,10 @@ sail artisan test
 
 - The sample Postman file for you to import is [here](https://github.com/tuan-nguyen-van/jitera-coding-test/blob/develop/postman_collection.json)
 
-- I added an outside of requirement feature for filter followers by sorting names by 'asc' or 'desc' to have more fun. 
-
 - Use husky npm package to run /.husky/pre-commit commands to run code checking, code fixing before commit and /.husky/pre-push to run tests before pushing code to github.
 
 - Use PHP CS Fixer package to fix code style before commit with the same format for all developers.
 
 - Use PHP stan package to check types, code logic, code quality and catch bugs automatically before commit.
-
-- I already deployed on AWS EC2 at this ip address: [http://13.213.67.188/](http://13.213.67.188/) for you to make api HTTP requests.
 
 - You could watch this youtube [video](https://youtu.be/rbqea2YZv6U) for reference. I will delete this video after the interview finished.
