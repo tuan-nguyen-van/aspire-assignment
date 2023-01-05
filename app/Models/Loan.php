@@ -22,6 +22,11 @@ class Loan extends Model
     public const PAYMENT_PERIOD = ['weekly', 'monthly'];
 
     /**
+     * @var string[]
+     */
+    public const STATE = ['approved', 'pending', 'paid'];
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function scheduledRepayments()

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Loan;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -17,15 +18,17 @@ class LoanFactory extends Factory
      */
     public function definition()
     {
-        $periods = ['weekly', 'monthly'];
-        $states = ['approved', 'pending', 'paid'];
+        $period = Loan::PAYMENT_PERIOD[array_rand(Loan::PAYMENT_PERIOD)];
+        $state = Loan::STATE[array_rand(Loan::STATE)];
+        $amount = fake()->numberBetween(1000, 100000);
 
         return [
-            'amount' => fake()->numberBetween(1000, 50000),
+            'amount' => $amount,
+            'remained_principle' => $amount,
             'term' => fake()->numberBetween(1, 12),
-            'payment_period' => $periods[array_rand($periods)],
-            'start_date' => Carbon::now()->subDays(fake()->numberBetween(-10, 10))->format('Y-m-d'),
-            'state' => $states[array_rand($states)],
+            'payment_period' => $period,
+            'start_date' => Carbon::now()->addDays(fake()->numberBetween(-100, 100))->format('Y-m-d'),
+            'state' => $state,
         ];
     }
 }

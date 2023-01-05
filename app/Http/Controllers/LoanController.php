@@ -17,17 +17,10 @@ class LoanController extends Controller
     {
         $validatedData = $this->validateLoanInputs($request);
 
-        // Check the payment_period is weekly or monthly.
-        if ($this->validatePaymentPeriod($request) !== 'ok') {
-            return $this->validatePaymentPeriod($request);
+        if ($this->validateOtherLogic($request) !== 'ok') {
+            return $this->validateOtherLogic($request);
         }
 
-        // Check the user who owns the api token is the same as $request->user_id
-        if ($request->user()->id !== $request->user_id) {
-            return response()->json([
-                'error' => 'Unauthorized',
-            ], 401);
-        }
         // Make a transation here to save the new loan and create
         // a bunch of scheduled_repayments with the state 'pending'.
         /**
@@ -90,8 +83,6 @@ class LoanController extends Controller
     {
         /** 
          * Check if the user who owns the api token is admin or not.
-         *
-         * @phpstan-ignore-next-line 
          */
         if (!$request->user()->isAdmin()) {
             return response()->json([
@@ -132,6 +123,24 @@ class LoanController extends Controller
     }
 
     /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show(Request $request, Loan $loan)
+    {
+        // Check if the user owns the token api is the owner of the loan
+        // We can allow admin to view user's loan as well
+        if ($request->user()->id !== $loan->user_id && !$request->user()->isAdmin()) {
+            return response()->json([
+                'error' => 'Unauthorized',
+            ], 401);
+        }
+
+        return response()->json([
+            'loan' => $loan,
+        ]);
+    }
+
+    /**
      * @return array<string,mixed>
      */
     private function validateLoanInputs(Request &$request)
@@ -148,8 +157,9 @@ class LoanController extends Controller
     /**
      * @return \Illuminate\Http\JsonResponse|'ok'
      */
-    public function validatePaymentPeriod(Request &$request)
+    public function validateOtherLogic(Request &$request)
     {
+        // Check the payment_period is weekly or monthly.
         if (!in_array($request->payment_period, Loan::PAYMENT_PERIOD)) {
             return response()->json([
                 'payment_period' => sprintf(
@@ -158,6 +168,18 @@ class LoanController extends Controller
                     Loan::PAYMENT_PERIOD[1]
                 ),
             ], 422);
+            // Check the user who owns the api token is the same as $request->user_id
+        }
+        if ($request->user()->id !== $request->user_id) {
+            return response()->json([
+                'error' => 'Unauthorized',
+            ], 401);
+            // Admin users cannot create loan for themself.
+        }
+        if ($request->user()->isAdmin()) {
+            return response()->json([
+                'forbidden' => 'Admins cannot create loan for themself.',
+            ], 401);
         }
 
         return 'ok';

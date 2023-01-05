@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserHasRoles;
@@ -46,8 +45,8 @@ class DatabaseSeeder extends Seeder
             'role_id' => $adminRole->id,
         ]);
 
+        // The rest of the users have role 'user'
         for ($i = 1; $i < $count; ++$i) {
-            // The rest of the users have role 'user'
             UserHasRoles::factory()->create([
                 'user_id' => $users[$i]->id,
                 'role_id' => $userRole->id,

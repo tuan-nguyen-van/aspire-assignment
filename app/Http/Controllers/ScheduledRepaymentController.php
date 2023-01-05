@@ -39,18 +39,18 @@ class ScheduledRepaymentController extends Controller
             return response()->json([
                 'amount' => "The amount must be at least: $repayment->amount.",
             ], 422);
-            // The repayment amount must be less than or equal the remained_principle.
         }
+        // The repayment amount must be less than or equal the remained_principle.
         if ($request->amount > $remainedPrinciple) {
             return response()->json([
                 'amount' => 'The max amount of money you can pay for this loan is: '
                     . (float) $remainedPrinciple . '.',
             ], 422);
-            // The state of the repayment must be 'active'.
         }
+        // The state of the repayment must be 'active'.
         if ($repayment->state !== 'active') {
             return response()->json([
-                'amount' => 'The scheduled payment is not active yet.',
+                'state' => 'The scheduled payment is not active.',
             ], 422);
         }
 

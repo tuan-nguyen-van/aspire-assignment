@@ -17,3 +17,6 @@ parameters:
 		- '#Cannot access property \$id on mixed.#'
 		- '#Call to an undefined method Faker\\Generator::.*#'
 		- '#.* but returns Illuminate\\Support\\Collection.*#'
+		- '#Expression .* on a separate line does not do anything.#'
+		- '#Cannot call method .* on Carbon\\Carbon\|false.#'
+		- '#Cannot call method isAdmin\(\) on mixed.#'

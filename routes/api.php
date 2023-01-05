@@ -21,9 +21,11 @@ Route::post('/token/create', [TokenController::class, 'create']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/loan', [LoanController::class, 'store']);
 
-    Route::post('/loan/approve/{loan}', [LoanController::class, 'approve']);
+    Route::patch('/loan/approve/{loan}', [LoanController::class, 'approve']);
 
     Route::get('/loan', [LoanController::class, 'index']);
+
+    Route::get('/loan/{loan}', [LoanController::class, 'show']);
 
     Route::patch('/scheduled-repayments/pay/{repayment}', [
         ScheduledRepaymentController::class, 'pay',
