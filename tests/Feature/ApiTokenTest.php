@@ -25,15 +25,12 @@ class ApiTokenTest extends TestCase
      */
     public function testGetApiToken()
     {
-        $response = $this->postJson(self::ROUTE, [
+        $this->postJson(self::ROUTE, [
             'email' => User::first()->email,
             'password' => 'password',
-        ]);
-
-        $response->assertStatus(200)->assertJson(
+        ])->assertStatus(200)->assertJson(
             fn (AssertableJson $json) => $json->has('token')
         );
-
         $this->assertDatabaseCount('personal_access_tokens', 1);
     }
 

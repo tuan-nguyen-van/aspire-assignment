@@ -51,6 +51,7 @@ class ScheduledRepaymentTest extends TestCase
             'id' => $firstRepayment->id,
             'state' => 'paid',
         ]);
+        // The remained_principle is decremented by repayment amount
         $this->assertDatabaseHas('loans', [
             'id' => $loan->id,
             'remained_principle' => round($loan->amount - round($loan->amount / $loan->term, 2), 2),
@@ -82,12 +83,13 @@ class ScheduledRepaymentTest extends TestCase
         )->assertStatus(200)->assertJson(
             fn (AssertableJson $json) => $json->has('loan')->has('scheduledRepayment')
         );
-        // The amount of the first repayment is amount/2
+        // The amount of the first repayment is amount/2 and state is 'paid'
         $this->assertDatabaseHas('scheduled_repayments', [
             'id' => $firstRepayment->id,
             'state' => 'paid',
             'amount' => self::AMOUNT / 2,
         ]);
+        // Other two have amount change from AMOUNT/3 to AMOUNT/4
         $this->assertDatabaseHas('scheduled_repayments', [
             'id' => $secondRepayment->id,
             'state' => 'active',
@@ -98,6 +100,7 @@ class ScheduledRepaymentTest extends TestCase
             'state' => 'active',
             'amount' => self::AMOUNT / 4,
         ]);
+        // The remained_principle of the loan change to AMOUNT/2
         $this->assertDatabaseHas('loans', [
             'id' => $loan->id,
             'remained_principle' => self::AMOUNT / 2,
@@ -229,7 +232,7 @@ class ScheduledRepaymentTest extends TestCase
                     .  round(self::AMOUNT, 2) . '.'
             );
 
-        // The state of the repayment is not active.
+        // Test the state of the repayment is not active (state: paid).
         $this->patchJson(
             "/api/scheduled-repayments/pay/$firstRepayment->id",
             [
@@ -266,7 +269,7 @@ class ScheduledRepaymentTest extends TestCase
          * @var ScheduledRepayment $firstRepayment
          */
         [$loan, $firstRepayment] = $this->createLoanWith3ScheduledRepayments();
-        // The third user pay for the second user
+        // The third user pay for the second user repayment
         $this->patchJson(
             "/api/scheduled-repayments/pay/$firstRepayment->id",
             [
