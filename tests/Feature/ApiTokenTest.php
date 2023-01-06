@@ -81,17 +81,19 @@ class ApiTokenTest extends TestCase
             'email' => 'john.doe111@gmail.com',
             'password' => 'password',
         ])->assertStatus(422)
-            ->assertJsonPath('authentication', [
+            ->assertJsonPath(
+                'authentication',
                 'The provided credentials are incorrect.',
-            ]);
+            );
 
         // Password is incorrect
         $this->postJson(self::ROUTE, [
             'email' => User::first()->email,
             'password' => 'password1',
         ])->assertStatus(422)
-            ->assertJsonPath('authentication', [
+            ->assertJsonPath(
+                'authentication',
                 'The provided credentials are incorrect.',
-            ]);
+            );
     }
 }

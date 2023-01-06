@@ -34,7 +34,7 @@ class ScheduledRepaymentController extends Controller
          */
         $remainedPrinciple = $loan->remained_principle;
 
-        // The amount must be greater than or equal then repayment amount
+        // The amount must be greater than or equal the repayment amount
         if ($request->amount < $repayment->amount) {
             return response()->json([
                 'amount' => "The amount must be at least: $repayment->amount.",
@@ -78,7 +78,8 @@ class ScheduledRepaymentController extends Controller
                     'state' => 'paid',
                 ]);
                 // Distribute the $newRemainedPrinciple equally for the rest of the
-                // active scheduledRepayments.
+                // active scheduledRepayments in case the amount is greater than the
+                // chosen repayment amount
                 if ($request->amount > $repaymentCurAmount) {
                     $otherRepaymentsQuery = ScheduledRepayment::where('state', 'active')
                         ->where('id', '<>', $repayment->id)

@@ -25,7 +25,7 @@ class TokenController extends Controller
 
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
-                'authentication' => ['The provided credentials are incorrect.'],
+                'authentication' => 'The provided credentials are incorrect.',
             ], 422);
         }
 
