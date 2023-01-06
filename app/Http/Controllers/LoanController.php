@@ -50,19 +50,18 @@ class LoanController extends Controller
                 // Calculate the amount for the last ScheduledRepayment to ensure the total
                 // amount of all ScheduledRepayments equal $validatedData['amount']
                 // to prevent round(..., 2) summing up not equal $validatedData['amount'].
-                $amount = ($i > 1 && $i === $validatedData['term']) ?
+                $amountOfRepayment = ($i > 1 && $i === $validatedData['term']) ?
                     $validatedData['amount'] - $totalAmountOfRepayments :
                     round($validatedData['amount'] / $validatedData['term'], 2);
 
                 $scheduledRepayments[] = [
                     'loan_id' => $loan->id,
-                    'amount' => $amount,
+                    'amount' => $amountOfRepayment,
                     'due_date' => $dueDate,
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
                 ];
-
-                $totalAmountOfRepayments += $amount;
+                $totalAmountOfRepayments += $amountOfRepayment;
             }
             // Use bulk insert here instead of single ScheduledRepayment::create()
             // one at a time because that causes many queries to database (N+1 problem)
@@ -127,7 +126,7 @@ class LoanController extends Controller
      */
     public function show(Request $request, Loan $loan)
     {
-        // Check if the user owns the token api is the owner of the loan
+        // Check if the user owns the api token is the owner of the loan
         // We can allow admin to view user's loan as well
         if ($request->user()->id !== $loan->user_id && !$request->user()->isAdmin()) {
             return response()->json([
@@ -157,7 +156,7 @@ class LoanController extends Controller
     /**
      * @return \Illuminate\Http\JsonResponse|'ok'
      */
-    public function validateOtherLogic(Request &$request)
+    public function validateOtherLogic(Request $request)
     {
         // Check the payment_period is weekly or monthly.
         if (!in_array($request->payment_period, Loan::PAYMENT_PERIOD)) {
@@ -168,14 +167,14 @@ class LoanController extends Controller
                     Loan::PAYMENT_PERIOD[1]
                 ),
             ], 422);
-            // Check the user who owns the api token is the same as $request->user_id
         }
+        // Check the user who owns the api token is the same as $request->user_id
         if ($request->user()->id !== $request->user_id) {
             return response()->json([
                 'error' => 'Unauthorized',
             ], 401);
-            // Admin users cannot create loan for themself.
         }
+        // Admin users cannot create loan for themself.
         if ($request->user()->isAdmin()) {
             return response()->json([
                 'forbidden' => 'Admins cannot create loan for themself.',
