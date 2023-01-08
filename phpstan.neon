@@ -20,3 +20,4 @@ parameters:
 		- '#Expression .* on a separate line does not do anything.#'
 		- '#Cannot call method .* on Carbon\\Carbon\|false.#'
 		- '#Cannot call method isAdmin\(\) on mixed.#'
+		- '#Access to an undefined property App\\Http\\Requests\\.*::.*#'

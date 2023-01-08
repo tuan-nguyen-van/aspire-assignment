@@ -104,15 +104,6 @@ class LoanTest extends TestCase
      */
     public function testUserCreatesNewLoanWithInvalidInputs()
     {
-        // The token belongs to the first user but use
-        // the second user for user_id
-        $this->postJson(
-            self::ROUTE,
-            $this->getInputs(),
-            ApiToken::bearerHeader(1)
-        )->assertStatus(401)
-            ->assertJsonPath('error', 'Unauthorized');
-
         // The payment_period is neither 'weekly' or 'monthly'
         $this->postJson(
             self::ROUTE,
@@ -148,21 +139,35 @@ class LoanTest extends TestCase
         $this->postJson(self::ROUTE, $this->getInputs([
             'user_id' => 3,
         ]), ApiToken::bearerHeader(2))
-            ->assertStatus(401)
+            ->assertStatus(403)
             ->assertJsonPath(
-                'error',
-                'Unauthorized'
+                'message',
+                'This action is unauthorized.'
             );
 
         // Admin users cannot create new loan for themself
         $this->postJson(self::ROUTE, $this->getInputs([
             'user_id' => 1,
         ]), ApiToken::bearerHeader(1))
-            ->assertStatus(401)
+            ->assertStatus(403)
             ->assertJsonPath(
-                'forbidden',
-                'Admins cannot create loan for themself.'
+                'message',
+                'This action is unauthorized.'
             );
+    }
+
+    /**
+     * @return void
+     */
+    public function testUserCreatesNewLoanWithWrongUserId()
+    {
+        // The token belongs to the first user but use the second user for user_id
+        $this->postJson(
+            self::ROUTE,
+            $this->getInputs(),
+            ApiToken::bearerHeader(1)
+        )->assertStatus(403)
+            ->assertJsonPath('message', 'This action is unauthorized.');
     }
 
     /**
@@ -186,7 +191,7 @@ class LoanTest extends TestCase
             [],
             ApiToken::bearerHeader(1)
         )->assertStatus(200)
-            ->assertJsonPath('status', 'Approved');
+            ->assertJson(fn (AssertableJson $json) => $json->has('loan'));
 
         // The loan changed state to 'approved' and the repayments changed state to 'active'
         $this->assertDatabaseHas('loans', [
@@ -216,8 +221,8 @@ class LoanTest extends TestCase
             '/api/loan/approve/' . $loan->id,
             [],
             ApiToken::bearerHeader(2)
-        )->assertStatus(401)
-            ->assertJsonPath('error', 'Unauthorized');
+        )->assertStatus(403)
+            ->assertJsonPath('message', 'This action is unauthorized.');
     }
 
     /**
@@ -287,8 +292,8 @@ class LoanTest extends TestCase
         /** @var Loan */
         $loan = $this->createLoanWithScheduledRepayments()[0];
         $this->getJson("/api/loan/$loan->id", ApiToken::bearerHeader(3))
-            ->assertStatus(401)
-            ->assertJsonPath('error', 'Unauthorized');
+            ->assertStatus(403)
+            ->assertJsonPath('message', 'This action is unauthorized.');
     }
 
     /**

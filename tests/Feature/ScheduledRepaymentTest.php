@@ -192,8 +192,8 @@ class ScheduledRepaymentTest extends TestCase
                 'amount' => self::AMOUNT / 2,
             ],
             ApiToken::bearerHeader(2)
-        )->assertStatus(422)
-            ->assertJsonPath('errors.user_id', ['The user id field is required.']);
+        )->assertStatus(403)
+            ->assertJsonPath('message', 'This action is unauthorized.');
 
         // Lack amount input
         $this->patchJson(
@@ -277,8 +277,8 @@ class ScheduledRepaymentTest extends TestCase
                 'amount' => round(self::AMOUNT / $loan->term, 2),
             ],
             ApiToken::bearerHeader(3)
-        )->assertStatus(401)
-            ->assertJsonPath('error', 'Unauthorized');
+        )->assertStatus(403)
+            ->assertJsonPath('message', 'This action is unauthorized.');
     }
 
     /**
