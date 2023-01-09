@@ -48,13 +48,9 @@ class LoanStoreTransaction implements Transaction
                 // Calculate the amount for the last ScheduledRepayment to ensure the total
                 // amount of all ScheduledRepayments equal $validatedData['amount']
                 // to prevent round(..., 2) summing up not equal $validatedData['amount'].
-                /**
-                 * @var int
-                 */
+                /** @var int */
                 $inputAmount = $validatedData['amount'];
-                /**
-                 * @var int
-                 */
+                /** @var int */
                 $inputTerm = $validatedData['term'];
                 $amountOfRepayment = ($i > 1 && $i === $validatedData['term']) ?
                     $inputAmount - $totalAmountOfRepayments :
